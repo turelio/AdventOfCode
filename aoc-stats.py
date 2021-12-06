@@ -10,15 +10,22 @@ aoc={
 
 def count_progress(lista):
 	counter=0
+	suma=0
 	for i in lista:
+		lista[i]=list(map(int, lista[i]))
 		counter+=lista[i].count(0)
+		suma+=sum(lista[i])
+
 	result=len(aoc)*25-counter
-	print(f"[{result}/{len(aoc)*25}] done, {'{:.1%}'.format(result/(len(aoc)*25))} progress")
-	return result
-print(count_progress(aoc))
+
+	msg=f"[{result}/{len(aoc)*25}] done, {'{:.1%}'.format(result/(len(aoc)*25))} progress, {suma} minutes total"
+	print(msg)
+	return msg
+#print(count_progress(aoc))
 
 def mdtable(lista):
-	out="2015|2016|2017|2018|2019|2020|2021\n"
+	out=f"{count_progress(aoc)}\n"
+	out+="2015|2016|2017|2018|2019|2020|2021\n"
 	out+="-|-|-|-|-|-|-\n"
 	for i in range(25):
 		for j in range(2015,2022):
