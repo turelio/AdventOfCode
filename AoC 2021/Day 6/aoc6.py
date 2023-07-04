@@ -1,22 +1,17 @@
 with open('input') as f:
 	lista=list(map(int, f.read().strip().split(',')))
 
-def next_day(fish):
-	temp=fish[0]
-	for i in range(8): fish[i]=fish[i+1]
-	fish[6]+=temp
-	fish[8]=temp
-	return fish
-
-def count_total(lista, n):
+def count_fish(lista, n):
 	fish=[lista.count(i) for i in range(9)]
 	for i in range(n):
-		fish=next_day(fish)
+		fish.append(fish.pop(0))
+		fish[6]+=fish[8]
 	return sum(fish)
 
-print(count_total(lista, 80))
-print(count_total(lista, 256))
+print(count_fish(lista, 80), count_fish(lista, 256))
 
+
+# wrong and unused
 
 # for c, v in enumerate(lista):
 # 	lista[c]={"start":6, "current":int(v)}
