@@ -1,7 +1,7 @@
 # 2022-12-03
 #Start	9:35
-#Part1	9:58
-#Part2	10:14
+#Part1	9:58	23 min
+#Part2	10:14	16 min
 #Total	39min
 import re
 with open('input') as f:
