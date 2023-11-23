@@ -3,6 +3,6 @@
 #Part1	
 #Part2	
 #Total
-with open('input') as f:
-	lista=f.read()
 
+# player=432
+# last=71019
