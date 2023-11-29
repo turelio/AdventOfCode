@@ -4,7 +4,7 @@ aoc={
 "2017":[32,6,77,(3,4),(8,4),(21,1),(24,71),(11,2),(37,31),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 "2018":[(3,36),(8,9),(23,16),(41,10),(18,22),(24,35),(13,53),(18,0),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 "2019":[9,25,(16,24),(11,12),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-"2020":[10,15,65,90,(50,10),(13,5),(12,14),(7,25),(15,7),(10,0),(20,27),(19,19),(7),(23,35),0,0,0,0,0,0,0,0,0,0,0],
+"2020":[10,15,65,90,(50,10),(13,5),(12,14),(7,25),(15,7),(10,0),(20,27),(19,19),(7,0),(23,35),(17,5),(23,45),(18,7),0,0,0,0,0,0,0,0],
 "2021":[15,15,55,115,80,85,30,146,149,50,70,270,62,115,240,122,83,0,0,0,100,(31,0),0,0,0,(62,0)],
 "2022":[15,22,21,12,30,8,233,93,110,36,47,135,108,64,95,0,(105,0),66,0,0,69,(75,0),111,0,(87,0)]
 }
@@ -31,10 +31,11 @@ def count_progress(lista):
 				year_sum+=sum(i)
 		counter+=year_count
 		suma+=year_sum
-		print(f'{l}\t{"{:02d}".format(year_count)}/50 stars\t\t{"{:02d}".format(year_sum//60)}:{"{:02d}".format(year_sum%60)}h')
+		print(f'{l}\t[{year_count:02}/50] stars\t\t{(year_count/50):.1%}\t\t{(year_sum//60):02}:{(year_sum%60):02}h\t\t{year_sum:4} minutes, ~{(year_sum/year_count):.0f} minutes per star')
 
+	msg=f'Total\t[{counter:02}/{(len(aoc)*50):02}] stars\t\t{counter/(len(aoc)*50):.1%}\t\t{(suma//60):02}:{(suma%60):02}h\t\t{suma:4} minutes, ~{(suma/counter):.0f} minutes per star'
 
-	msg=f"[{counter}/{len(aoc)*50}] done, {'{:.1%}'.format(counter/(len(aoc)*50))} progress, {suma} minutes / {suma//60}:{suma%60}h total, ~{'{:.0f}'.format(suma/counter)} minutes per star"
+	# msg=f"[{counter}/{len(aoc)*50}] done, {'{:.1%}'.format(counter/(len(aoc)*50))} progress, {suma} minutes / {suma//60}:{suma%60}h total, ~{'{:.0f}'.format(suma/counter)} minutes per star"
 	print(msg)
 	return msg
 #print(count_progress(aoc))
