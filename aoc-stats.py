@@ -45,7 +45,7 @@ year, year_count, year_sum = total
 out='## Summary\n'
 out+='Year|Stars|%|Time spent|Minutes per star\n'
 out+='-|-|-|-|-\n'
-out+=f'{year}|[{year_count}/{len(data)*50}]|{(year_count/50):.1%}|{(year_sum//60):02}:{(year_sum%60):02}h|{(year_sum/year_count):.0f} min/★\n'
+out+=f'{year}|[{year_count}/{len(data)*50}]|{(year_count/(len(data)*50)):.1%}|{(year_sum//60):02}:{(year_sum%60):02}h|{(year_sum/year_count):.0f} min/★\n'
 for year, year_count, year_sum in summary:
 	entry=f'{year}|[{year_count:02}/50]|{(year_count/50):.1%}|{(year_sum//60):02}:{(year_sum%60):02}h|{(year_sum/year_count):.0f} min/★\n'
 	out+=entry
