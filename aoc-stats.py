@@ -1,4 +1,5 @@
-aoc={
+# each element contains completion time in minutes, tuple means the times were split into Part 1 and 2
+data={
 "2015":[5,13,22,21,38,(13,4),(50,2),(14,9),(23,1),(17,1),(40,1),(7,56),(15,5),(10,14),(42,5),(7,14),(44,5),(20,5),(29,22),(13,30),(27,7),(202,3),(43,1),(35,41),(28,1)],
 "2016":[54,28,15,54,(14,15),(2,6),(20,10),(62,1),(33,0),(54,2),0,(17,1),(60,8),(51,23),(36,40),(15,71),(59,1),(20,2),(38,87),(33,4),(33,5),(32,0),(41,40),(69,10),(22,0)],
 "2017":[32,6,77,(3,4),(8,4),(21,1),(24,71),(11,2),(37,31),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -9,21 +10,20 @@ aoc={
 "2022":[15,22,21,12,30,8,233,93,110,36,47,135,108,64,95,0,(105,0),66,0,0,69,(75,0),111,0,(87,0)]
 }
 
-def count_progress(lista):
+def count_progress(data):
+	summary=[]
 	counter=0
 	suma=0
-	for l in lista:
+	for year,days in data.items():
 		year_count=0
 		year_sum=0
-		# lista[i]=list(map(int, lista[i]))
-		for i in lista[l]:
+		for i in days:
 			if i==0:
 				continue
 			elif isinstance(i,int):
 				year_count+=2
 				year_sum+=i
 			else:
-				# print(type(i), i)
 				if 0 in i:
 					year_count+=1
 				else:
@@ -31,27 +31,20 @@ def count_progress(lista):
 				year_sum+=sum(i)
 		counter+=year_count
 		suma+=year_sum
-		print(f'{l}\t[{year_count:02}/50] stars\t\t{(year_count/50):.1%}\t\t{(year_sum//60):02}:{(year_sum%60):02}h\t\t{year_sum:4} minutes, ~{(year_sum/year_count):.0f} minutes per star')
+		print(f'{year}\t[{year_count:02}/50] stars\t\t{(year_count/50):.1%}\t\t{(year_sum//60):02}:{(year_sum%60):02}h\t\t{year_sum:4} minutes, ~{(year_sum/year_count):.0f} minutes per star')
+		summary.append((year, year_count, year_sum))
+	total=('Total',counter,suma)
+	print(f'Total\t[{counter:02}/{(len(data)*50):02}] stars\t\t{counter/(len(data)*50):.1%}\t\t{(suma//60):02}:{(suma%60):02}h\t\t{suma:4} minutes, ~{(suma/counter):.0f} minutes per star')
 
-	msg=f'Total\t[{counter:02}/{(len(aoc)*50):02}] stars\t\t{counter/(len(aoc)*50):.1%}\t\t{(suma//60):02}:{(suma%60):02}h\t\t{suma:4} minutes, ~{(suma/counter):.0f} minutes per star'
+	return total,summary[::-1]
 
-	# msg=f"[{counter}/{len(aoc)*50}] done, {'{:.1%}'.format(counter/(len(aoc)*50))} progress, {suma} minutes / {suma//60}:{suma%60}h total, ~{'{:.0f}'.format(suma/counter)} minutes per star"
-	print(msg)
-	return msg
-#print(count_progress(aoc))
-message=count_progress(aoc)
-out=f"{message}\n"
-out+="2015|2016|2017|2018|2019|2020|2021|2022\n"
-out+="-|-|-|-|-|-|-|-\n"
-for i in range(25):
-	for j in range(2015,2023):
-		if isinstance(aoc[str(j)][i], int):
-			value=aoc[str(j)][i]
-		else:
-			value=sum(aoc[str(j)][i])
-		out+=f"{value}|"
-	out+="\n"
+total,summary=count_progress(data)
+out='## Summary\n'
+out+='Year|Stars|%|Time spent|Minutes per star\n'
+out+='-|-|-|-|-\n'
+for year, year_count, year_sum in summary:
+	entry=f'{year}|{year_count}|{(year_count/50):.1%}|{(year_sum//60):02}:{(year_sum%60):02}h|{(year_sum/year_count):.0f} min/★\n'
+	out+=entry
 
-
-with open("README.md", "w") as f:
+with open("README.md", "w", encoding="utf-8") as f:
 	f.write(out)
