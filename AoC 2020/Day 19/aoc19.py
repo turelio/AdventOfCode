@@ -81,7 +81,7 @@ print(rules2)
 print(poss)
 print()
 def flatten(s,c='',n=0):
-	print('\t'*n,f'list has {len(s) elements}')
+	print('\t'*n,f'list has {len(s)}')
 	branches=itertools.product(*s)
 	for b in branches:
 		c2=c
@@ -91,4 +91,4 @@ def flatten(s,c='',n=0):
 
 x=poss['0'][0]
 print(x)
-flatten(poss['0'][0])
+# flatten(poss['0'][0])
