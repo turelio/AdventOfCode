@@ -27,4 +27,4 @@ for i in range(100):
 	for j in range(100):
 		if intcomp(code,i,j)==19690720:
 			print(i*100+j)
-#intcomp(code,12,2)
+print(intcomp(code,12,2))

@@ -36,15 +36,7 @@ for k,v in nodes2.items():
 
 print(len(silver))
 
-
-	# x,y=k
-	# adj=[(x+1,y),(x-1,y),(x,y+1),(x,y-1)]
-	# adj=[a for a in adj if a in nodes2.keys()]
-	# for a in adj:
-	# 	combined=v[1]+nodes2[a][1]
-	# 	if combined<=v[0] or combined<=nodes2[a][0]:
-	# 		silver.add((a,k))
-
 gy=0
 gx=mx
 print(gx,gy)
+print(nodes2)

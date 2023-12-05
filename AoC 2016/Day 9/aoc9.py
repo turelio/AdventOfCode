@@ -1,8 +1,8 @@
-# 2023-10-17
-#Start	18:30
-#Part1	19:03 33min stopped
-#Part2	
-#Total
+# 2023-10-17, 2023-12-04
+#Start	18:30 		
+#Part1	19:03		33min, stopped
+#Part2	12:10-12:30	40min
+#Total	74min
 import re
 
 with open('input') as f:
@@ -24,21 +24,24 @@ def decompress(s):
 			repeated=s[:i]
 			answer+=repeated*n
 			s=s[i:]
-
 	return answer
 
+def decompress2(s):
+	occ=[1]*len(s)
+	test=list(re.finditer(r'\((\d+)x(\d+)\)',s))
+	# multiply counts of characters after parentheses
+	for p in test:
+		n,j=p.groups()
+		s1,s2=p.span()[1],p.span()[1]+int(n)
+		for j2 in range(s1,s2):
+			occ[j2]*=int(j)
+	# all parentheses counts are 0 because they're unpacked
+	for p in test:
+		s1,s2=p.span()
+		for j2 in range(s1,s2):
+			occ[j2]=0
+	return sum(occ)
+
 # Silver:
-print(len(decompress(lista)))
-
-# too slow to work
-current='(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN'
-x=0
-while True:
-	new=decompress(current)
-	print(x, len(current),len(new))
-	if len(current)==len(new):
-		break
-	else:
-		current=new
-
-print(len(new))
+print('Silver:',len(decompress(lista)))
+print('Gold:',decompress2(lista))
