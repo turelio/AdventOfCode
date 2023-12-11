@@ -3,100 +3,48 @@
 # Part1	09:03	13min
 # Part2	09:30	27min
 # Total	40min
+import copy, itertools
 with open('input') as f:
 	lista=f.read().splitlines()
-
-test='''...#......
-.......#..
-#.........
-..........
-......#...
-.#........
-.........#
-..........
-.......#..
-#...#.....'''.splitlines()
-# lista=test
 lista=[list(l) for l in lista]
-# [print(''.join(l)) for l in lista]
-# print(lista)
-g3=[]
+
+# galaxy coordinates
+galaxies=[]
 for y,v in enumerate(lista):
 	for x,v2 in enumerate(v):
 		if lista[y][x]=='#':
-			g3.append([x,y])
+			galaxies.append([x,y])
 
-y=0
-ye=[]
+# save indices of empty rows and columns
+y, ye=0,[]
 for y,v in enumerate(lista):
 	if '#' not in v:
 		ye.append(y)
-lista=list(zip(*lista))
 
-x=0
-xe=[]
-for x,v in enumerate(lista):
+x,xe=0,[]
+for x,v in enumerate(list(zip(*lista))):
 	if '#' not in v:
 		xe.append(x)
-lista=list(zip(*lista))
 
-import copy
-print(g3,xe,ye)
-gal=[]
-for g in g3:
-	print(g)
-	entry=copy.deepcopy(g)
-	for x in xe:
-		if x<g[0]:
-			entry[0]+=999999
-	for y in ye:
-		if y<g[1]:
-			entry[1]+=999999
-	gal.append(entry)
-	print('\t',entry)
+# increment coordinate by n if row/column is before it
+def solve(galaxies,n):
+	galaxies2=[]
+	for g in galaxies:
+		entry=copy.deepcopy(g)
+		for x in xe:
+			if x<g[0]:
+				entry[0]+=n
+		for y in ye:
+			if y<g[1]:
+				entry[1]+=n
+		galaxies2.append(entry)
 
-import itertools
-pairs=list(itertools.combinations(gal,2))
-print(len(pairs))
-silver=0
-for g1,g2 in pairs:
-	silver+=abs(g1[0]-g2[0])+abs(g1[1]-g2[1])
-print(silver)
+	# manhattan distance on pairs
+	pairs=list(itertools.combinations(galaxies2,2))
+	result=0
+	for g1,g2 in pairs:
+		result+=abs(g1[0]-g2[0])+abs(g1[1]-g2[1])
+	return result
 
-
-
-# y=0
-# while y<len(lista):
-# 	if '#' in lista[y]:
-# 		y+=1
-# 	else:
-# 		lista.insert(y,lista[y])
-# 		y+=2
-# # print('part1')
-# # [print(''.join(l)) for l in lista]
-# lista=list(zip(*lista))
-# # [print(''.join(l)) for l in lista]
-# y=0
-# while y<len(lista):
-# 	if '#' in lista[y]:
-# 		y+=1
-# 	else:
-# 		lista.insert(y,lista[y])
-# 		y+=2
-# lista=list(zip(*lista))
-# g=[]
-# # [print(''.join(l)) for l in lista]
-# # print('part2')
-# for y,v in enumerate(lista):
-# 	for x,v2 in enumerate(v):
-# 		if lista[y][x]=='#':
-# 			g.append((x,y))
-# print(len(g))
-# import itertools
-# pairs=list(itertools.combinations(g,2))
-# print(len(pairs))
-# silver=0
-# for g1,g2 in pairs:
-# 	silver+=abs(g1[0]-g2[0])+abs(g1[1]-g2[1])
-# print(silver)
-# print(g3)
+print('Silver:', solve(galaxies,1))
+print('Gold:', solve(galaxies,999999))
