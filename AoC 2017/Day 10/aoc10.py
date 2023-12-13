@@ -45,5 +45,5 @@ for l in lengths:
 # for x in range(50):
 # 	print(i)
 # 	i=(i+2)%len(lista)
-
+print(len(lista))
 print(lista[0]*lista[1])
