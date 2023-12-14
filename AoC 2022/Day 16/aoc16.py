@@ -1,82 +1,109 @@
-
-#Start	10:40
-# gave up, ~3h?
-#back 22-12-24 for 
-#Part1	
-#Part2	
-#Total
+# 2022-12-16, 2023-12-14
+#Start	10:40, gave up
+#Part1 2023-12-14 13:36, 80min + 180min
+#Part2 2023-12-14 14:26, 50min	
+#Total 310min
 import re, copy, itertools
 with open('input') as f:
 	lista=f.read().splitlines()
+# how many valves should you try to open, used for debugging
+max_open=6
 
-max_flow=0
-neighbors={}
+near={}
+flow={}
+# parse connections and flows
 for l in lista:
-	result=re.search(r'Valve (.*) has flow rate=(\d*); tunnels? leads? to valves? (.*)', l)
-	neighbors[result[1]]={}
-	neighbors[result[1]]['flow']=int(result[2])
-	neighbors[result[1]]['val']=0
-	max_flow+=int(result[2])
-	neighbors[result[1]]['near']=list(result[3].split(', '))
+	r=re.match(r'Valve (.*) has flow rate=(\d*); tunnels? leads? to valves? (.*)', l)
+	r=list(r.groups())
+	flow[r[0]]=int(r[1])
+	near[r[0]]=r[2].split(', ')
 
-def shortest(start,end):
+# pathfinding to find distances between valves
+def shortest(start):
 	visited=set()
 	traverse={}
-	for k in neighbors:
+	for k in near:
 		traverse[k]=10000
 	traverse[start]=0
-	while True:
-		traverse=dict(sorted(traverse.items(), key=lambda item: item[1]))
-		for k,v in traverse.items():
-			if k not in visited:
-				c=k
-				break
-		if c==end:
-			# print(f'from {start} to {end} in {traverse[c]} steps')
-			steps=traverse[c]
-			break
+	queue=[start]
+	while len(queue)!=0:
+		c=queue.pop(0)
 		visited.add(c)
-		moves=neighbors[c]['near']
+		moves=near[c]
 		for m in moves:
-			if traverse[c]+1<traverse[m]:
+			if traverse[c]<traverse[m]:
 				traverse[m]=traverse[c]+1
-	return steps, traverse
+		moves=[m for m in moves if m not in visited and m not in queue]
+		queue+=moves
+	return traverse
+dist={k:shortest(k) for k in near}
 
-closest={}
-for k1 in neighbors:
-	closest[k1]={}
-	for k2 in neighbors:
-		# if k1==k2:
-		# 	continue
-		closest[k1][k2]=shortest(k1,k2)[0]
-
-print(len(neighbors), len(closest), len(closest['AA']))
-# print(closest)
-
-neighbors=dict(sorted(neighbors.items(), key=lambda item: item[1]['flow'], reverse=True))
-common=list(neighbors.keys())[:9]
-# for k,v in neighbors.items():
-	# print(k,v['flow'])
-# print(closest)
-print(common)
-# print('')
-possible=list(itertools.permutations(common))
-# print(len(possible))
-
-test=possible
-silver=set()
-for road in test:
+def solve(order):
 	c='AA'
-	m=1
-	value=0
-	for i in road:
-		m+=closest[c][i]+1
-		if m>30:
-			break
-		value+=(30-m-(closest[c][i]-1))*neighbors[i]['flow']
-		c=i
-	print(value)
-	silver.add(value)
+	done=False
+	on=len(order)
+	t=1
+	total=0
+	rate=0
+	opened=[]
+	n=order.pop(0)
+	steps=dist[c][n]
+	while t!=31:
+		# print(f'== Minute {t} ==')
+		if len(opened)==0:
+			pass
+			# print('No valves are open.')
+		else:
+			total+=rate
+			# print(f'Valves {opened} are open, releasing {rate} pressure. (total {total})')
+		if done:
+			pass
+			# print('Waiting')
+			# t+=1
+		elif steps!=0:
+			# print(f'You move to valve {n}.')
+			steps-=1
+			# t+=1
+		else:
+			# print(f'You open valve {n}.')
+			opened.append(n)
+			rate+=flow[n]
+			if len(opened)==on:
+				done=True
+			else:
+				c=n
+				n=order.pop(0)
+				steps=dist[c][n]
+		if t==26:
+			total2=total
+		t+=1		
+	return total,total2
 
-print(max(silver))
-#1627?
+viable=set([k for k,v in flow.items() if v!=0])
+test=list(itertools.permutations(viable, max_open))
+silver=set()
+best={}
+for i,t in enumerate(test):
+	if i%100000==0:
+		print(i,t)
+	entry,entry2=solve(list(t))
+	silver.add(entry)
+	# group same valves with different order together to find the best order
+	general=tuple(sorted(t))
+	if general not in best:
+		best[general]=set()
+	best[general].add(entry2)
+
+# Part 2 is finding the 2 sets of moves that do not interest, adding their
+best={k:max(v) for k,v in best.items()}
+gold=set()
+for route1 in best:
+	# find remaining viable valve combinations and their best value
+	rest=viable-set(route1)
+	candidates=list(itertools.combinations(rest,max_open))
+	for c in candidates:
+		route2=tuple(sorted(c))
+		total=best[route1]+best[route2]
+		gold.add(total)
+
+print(max(silver),max(gold))
